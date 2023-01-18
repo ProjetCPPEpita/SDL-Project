@@ -214,7 +214,7 @@ void wolf::move(std::vector<animal*> storage) {
     this->point = get_target(this->position, storage)->get_position();
 
   // If the wolf touch a sheep, the sheep die and the wolf has a new target
-  if (inRange(this->point.x, this->point.x + 30, this->position.x) && inRange(this->point.y, this->point.y - 30, this->position.y))
+  if (inRange(this->point.x, this->point.x + 40, this->position.x) && inRange(this->point.y, this->point.y - 45, this->position.y))
   {
     death(this->point, storage);
     this->point = get_target(this->position, storage)->get_position();

@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base
+CMAKE_SOURCE_DIR = /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build
+CMAKE_BINARY_DIR = /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

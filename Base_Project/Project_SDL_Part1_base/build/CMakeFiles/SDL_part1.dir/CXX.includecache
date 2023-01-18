@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp
+/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp
 Project_SDL1.h
-/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.h
+/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.h
 algorithm
 -
 cassert
@@ -24,7 +24,7 @@ string
 math.h
 -
 
-/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.h
+/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.h
 SDL.h
 -
 SDL_image.h

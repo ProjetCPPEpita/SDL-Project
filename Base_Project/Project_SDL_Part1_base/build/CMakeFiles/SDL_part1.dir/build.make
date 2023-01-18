@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base
+CMAKE_SOURCE_DIR = /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build
+CMAKE_BINARY_DIR = /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/SDL_part1.dir/depend.make
@@ -59,29 +59,29 @@ include CMakeFiles/SDL_part1.dir/flags.make
 
 CMakeFiles/SDL_part1.dir/main.cpp.o: CMakeFiles/SDL_part1.dir/flags.make
 CMakeFiles/SDL_part1.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/SDL_part1.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SDL_part1.dir/main.cpp.o -c /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/SDL_part1.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SDL_part1.dir/main.cpp.o -c /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp
 
 CMakeFiles/SDL_part1.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/SDL_part1.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp > CMakeFiles/SDL_part1.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp > CMakeFiles/SDL_part1.dir/main.cpp.i
 
 CMakeFiles/SDL_part1.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/SDL_part1.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp -o CMakeFiles/SDL_part1.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp -o CMakeFiles/SDL_part1.dir/main.cpp.s
 
 CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o: CMakeFiles/SDL_part1.dir/flags.make
 CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o: ../Project_SDL1.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o -c /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o -c /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp
 
 CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp > CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp > CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.i
 
 CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp -o CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp -o CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.s
 
 # Object files for target SDL_part1
 SDL_part1_OBJECTS = \
@@ -95,7 +95,7 @@ SDL_part1: CMakeFiles/SDL_part1.dir/main.cpp.o
 SDL_part1: CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o
 SDL_part1: CMakeFiles/SDL_part1.dir/build.make
 SDL_part1: CMakeFiles/SDL_part1.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable SDL_part1"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable SDL_part1"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SDL_part1.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -108,6 +108,6 @@ CMakeFiles/SDL_part1.dir/clean:
 .PHONY : CMakeFiles/SDL_part1.dir/clean
 
 CMakeFiles/SDL_part1.dir/depend:
-	cd /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build /home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/SDL_part1.dir/depend
 

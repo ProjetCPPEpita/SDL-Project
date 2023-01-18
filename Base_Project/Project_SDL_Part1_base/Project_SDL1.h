@@ -41,7 +41,7 @@ protected:
 
   char type; // To know the type of animal (sheep or wolf)
   int pv = 0;; // To distinguish sheeps and wolves
-  int speed; // To move more or less quickly
+  float speed; // To move more or less quickly
   void death(SDL_Rect point, std::vector<animal*> storage);
 
 public:

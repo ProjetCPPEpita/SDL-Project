@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp" "/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o"
-  "/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp" "/home/melinda-marmot/Documents/APPING2/C++/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/main.cpp.o"
+  "/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.cpp" "/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o"
+  "/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp" "/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

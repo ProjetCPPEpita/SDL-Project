@@ -1,0 +1,3 @@
+/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/cmake-build-debug/CMakeFiles/SDL_part1.dir
+/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/cmake-build-debug/CMakeFiles/rebuild_cache.dir
