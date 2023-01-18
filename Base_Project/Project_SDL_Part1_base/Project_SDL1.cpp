@@ -1,4 +1,4 @@
-﻿// SDL_Test.cpp: Definiert den Einstiegspunkt für die Anwendung.
+﻿﻿// SDL_Test.cpp: Definiert den Einstiegspunkt für die Anwendung.
 //
 
 #include "Project_SDL1.h"
@@ -57,13 +57,20 @@ SDL_Rect get_random(SDL_Rect point){
 }
 
 animal* get_target(SDL_Rect wolf, std::vector<animal*> storage) {
-    double first_x = storage[0]->get_position().x - wolf.x;
-    double first_y = storage[0]->get_position().y - wolf.y;
+    // on prend des moutons qui sont encore en vie
+    double first_x;
+    double first_y;
+    int i = 0;
+    while (storage[i]->get_pv() != 1 && storage[i]->get_type() != 's')
+    {
+        i++;
+    }
+    first_x = storage[i]->get_position().x - wolf.x;
+    first_y = storage[i]->get_position().y - wolf.y;
     double min = sqrt(first_x*first_x + first_y*first_y);
-    animal *nearest = storage[0];
+    animal *nearest = storage[i];
     for (auto target : storage) {
       if (target->get_type() == 's' && target->get_pv() == 1) {
-        std::cout << "nearest x = " << target->get_position().x << "\nnearest y = " << target->get_position().y << "\n";
         double diff_x = target->get_position().x - wolf.x;
         double diff_y = target->get_position().y - wolf.y;
         double dist = sqrt(diff_x*diff_x - diff_y*diff_y);
@@ -72,7 +79,7 @@ animal* get_target(SDL_Rect wolf, std::vector<animal*> storage) {
           nearest = target;
       }
     }
-    std::cout << "nearest x = " << nearest->get_point().x << "\nnearest y = " << nearest->get_point().y << "\n";
+
     return nearest;
 }
 
@@ -110,55 +117,61 @@ void animal::draw(){
 sheep::sheep(SDL_Surface* window_surface_ptr, char type) : animal(file_path_s, window_surface_ptr){
   this->type = type;
   this->point = get_random(point);
-  this->speed = 1.5;
+  std::cout << "point.x =" << this->point.x <<"\npoint.y="<< this->point.y<<'\n';
+  this->speed = 1;
 }
 
 void sheep::move(std::vector<animal*> storage) {
 
   // Compare animal position and point followed position
   if (this->point.x > this->position.x){
-    if (this->point.y > this->position.y){
       this->position.x += this->speed;
+    if (this->point.y > this->position.y){
       this->position.y += this->speed;
     }
-    else{
-      this->position.x += this->speed;
+    else if (this->point.y < this->position.y){
       this->position.y -= this->speed;
     }
   }
-  else{
-    if (this->point.y > this->position.y){
+  else if (this->point.x < this->position.x){
       this->position.x -= this->speed;
+    if (this->point.y > this->position.y){
       this->position.y += this->speed;
     }
-    else{
-      this->position.x -= this->speed;
+    else if (this->point.y < this->position.y){
       this->position.y -= this->speed;
     }
+  }
+  else if (this->point.x == this->position.x)
+  {
+      if (this->point.y > this->position.y){
+          this->position.y += this->speed;
+      }
+      else if (this->point.y < this->position.y){
+          this->position.y -= this->speed;
+      }
   }
 
+
+
   // If the animal touch the point, modify point position
-  if (this->position.x == get_point().x && this->position.y == get_point().y) {
+  if (this->position.x == this->point.x && this->position.y == this->point.y) {
     this->point = get_random(this->point);
   }
 }
 
 wolf::wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage) : animal(file_path_w, window_surface_ptr){
   this->type = type;
-  this->speed = 1;
+  this->speed = 0.5;
 
   animal *target = get_target(this->position, storage);
   if (target->get_type() == 'w') {
     this->point = get_random(this->point);
-    std::cout << "ok1\n";
   }
   else {
-    this->point = target->get_point();
-    std::cout << "x = " << target->get_point().x << "\ny = " << target->get_point().y << "\ntype = " << this->type;
-    std::cout << "ok2\n";
-    std::cout << "x = " << this->point.x << "\ny = " << this->point.y << "\ntype = " << this->type;
+    this->point = target->get_position();
   }
-  std::cout << "x = " << this->point.x << "\ny = " << this->point.y << "\ntype = " << this->type;
+
 
 }
 
@@ -166,30 +179,39 @@ void wolf::move(std::vector<animal*> storage) {
 
   // Compare animal position and point followed position
   if (this->point.x > this->position.x){
-    if (this->point.y > this->position.y){
       this->position.x += this->speed;
+    if (this->point.y > this->position.y){
       this->position.y += this->speed;
     }
-    else{
-      this->position.x += this->speed;
+    else if (this->point.y < this->position.y){
       this->position.y -= this->speed;
     }
   }
-  else{
-    if (this->point.y > this->position.y){
+  else if (this->point.x < this->position.x){
       this->position.x -= this->speed;
+    if (this->point.y > this->position.y){
       this->position.y += this->speed;
     }
-    else{
-      this->position.x -= this->speed;
+    else if (this->point.y < this->position.y){
       this->position.y -= this->speed;
     }
   }
+  else if (this->point.x == this->position.x)
+  {
+      if (this->point.y > this->position.y){
+          this->position.y += this->speed;
+      }
+      else if (this->point.y < this->position.y){
+          this->position.y -= this->speed;
+      }
+  }
+    this->point = get_target(this->position, storage)->get_position();
 
   // If the wolf touch a sheep, the sheep die and the wolf has a new target
-  if (this->position.x == this->point.x && this->position.y == this->point.y) {
+  if (this->position.x == this->point.x && this->position.y == this->point.y) // faire une hitbox psk
+  {
     death(this->point, storage);
-    this->point = get_target(position, storage)->get_point();
+    this->point = get_target(this->position, storage)->get_position();
   }
 }
 
@@ -275,6 +297,7 @@ int application::loop(unsigned period){
         SDL_FillRect(s, NULL, SDL_MapRGB(s ->format, 0, 255, 0));
         SDL_BlitSurface(s, NULL, window_surface_ptr_, nullptr);
         SDL_UpdateWindowSurface(window_ptr_);
+        srand(time(NULL));
 
         while((SDL_GetTicks() < (period*1000)) && continuer ) {
 
