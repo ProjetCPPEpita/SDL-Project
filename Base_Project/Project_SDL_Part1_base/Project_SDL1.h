@@ -28,17 +28,17 @@ constexpr char file_path_w[] = "../media/wolf.png"; // Path to the wolf image
 void init();
 
 class animal {
-private:
+protected:
   SDL_Surface* window_surface_ptr_; // ptr to the surface on which we want the
                                     // animal to be drawn, also non-owning
   SDL_Surface* image_ptr_; // The texture of the sheep (the loaded image), use
                            // load_surface_for
-
-protected:
   SDL_Rect position; // To have access to the position of each animal
-  SDL_Rect point; // Animals will follow a virtual point to all move
-                  // in a different way
 
+
+  SDL_Rect point; // Animals will follow a virtual point to all move
+    // in a different way
+  bool chosen;
   char type; // To know the type of animal (sheep or wolf)
   int pv = 0;; // To distinguish sheeps and wolves
   float speed; // To move more or less quickly
@@ -51,6 +51,8 @@ public:
   char get_type();
   int get_pv();
   int get_speed();
+  bool get_chosen();
+  void set_chosen(bool choose);
 
   animal(const char *file_path, SDL_Surface* window_surface_ptr);
 
@@ -65,10 +67,11 @@ public:
 // Insert here:
 // class sheep, derived from animal
 class sheep : public animal {
+
 public:
-  sheep(SDL_Surface* window_surface_ptr, char type);
-  ~sheep(){}
-  void move(std::vector<animal*> storage);
+    sheep(SDL_Surface* window_surface_ptr, char type);
+    ~sheep(){}
+    void move(std::vector<animal*> storage);
 };
 
 // Insert here:
@@ -80,6 +83,7 @@ public:
   wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage);
   ~wolf(){}
   void move(std::vector<animal*> storage);
+  SDL_Rect get_target(std::vector<animal*> storage);
 };
 
 // The "ground" on which all the animals live (like the std::vector

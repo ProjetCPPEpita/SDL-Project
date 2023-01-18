@@ -49,6 +49,12 @@ int animal::get_pv() {
 int animal::get_speed() {
   return this->speed;
 }
+bool animal::get_chosen(){
+    return this->chosen;
+}
+void animal::set_chosen(bool choose){
+    this->chosen = choose;
+}
 
 SDL_Rect get_random(SDL_Rect point){
 
@@ -62,7 +68,7 @@ SDL_Rect get_random(SDL_Rect point){
 
 }
 
-animal* get_target(SDL_Rect wolf, std::vector<animal*> storage) {
+SDL_Rect wolf::get_target( std::vector<animal*> storage) {
     // on prend des moutons qui sont encore en vie
     double first_x;
     double first_y;
@@ -71,21 +77,21 @@ animal* get_target(SDL_Rect wolf, std::vector<animal*> storage) {
     {
         i++;
     }
-    first_x = storage[i]->get_position().x - wolf.x;
-    first_y = storage[i]->get_position().y - wolf.y;
+    first_x = storage[i]->get_position().x - position.x;
+    first_y = storage[i]->get_position().y - position.y;
     double min = sqrt(first_x*first_x + first_y*first_y);
-    animal *nearest = storage[i];
+    SDL_Rect nearest = storage[i]->get_position();
     for (auto target : storage) {
-      if (target->get_type() == 's' && target->get_pv() == 1) {
-        double diff_x = target->get_position().x - wolf.x;
-        double diff_y = target->get_position().y - wolf.y;
-        double dist = sqrt(diff_x*diff_x - diff_y*diff_y);
+      if (target->get_type() == 's' && target->get_pv() == 1 ) {
+        double diff_x = target->get_position().x - get_position().x;
+        double diff_y = target->get_position().y - get_position().y;
+        double dist = sqrt(diff_x*diff_x + diff_y*diff_y);
         if (dist < min)
           min = dist;
-          nearest = target;
+          nearest = target->get_position();
       }
     }
-
+   // nearest->set_chosen(true);
     return nearest;
 }
 
@@ -121,6 +127,7 @@ void animal::draw(){
 }
 
 sheep::sheep(SDL_Surface* window_surface_ptr, char type) : animal(file_path_s, window_surface_ptr){
+  this->chosen = false;
   this->type = type;
   this->point = get_random(point);
   std::cout << "point.x =" << this->point.x <<"\npoint.y="<< this->point.y<<'\n';
@@ -170,20 +177,20 @@ wolf::wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> stor
   this->type = type;
   this->speed = 1;
 
-  animal *target = get_target(this->position, storage);
+  /*animal *target = get_target(this->position, storage);
   if (target->get_type() == 'w') {
     this->point = get_random(this->point);
   }
   else {
     this->point = target->get_position();
   }
-
+    std::cout<<"wpoint x " <<this->point.x <<'\n' <<"wpoint y " <<this->point.y<<'\n';*/
 
 }
 
 void wolf::move(std::vector<animal*> storage) {
 
-  // Compare animal position and point followed position
+    point = get_target(storage);// Compare animal position and point followed position
   if (this->point.x > this->position.x){
       this->position.x += this->speed;
     if (this->point.y > this->position.y){
@@ -211,13 +218,13 @@ void wolf::move(std::vector<animal*> storage) {
           this->position.y -= this->speed;
       }
   }
-    this->point = get_target(this->position, storage)->get_position();
+
 
   // If the wolf touch a sheep, the sheep die and the wolf has a new target
-  if (inRange(this->point.x, this->point.x + 40, this->position.x) && inRange(this->point.y, this->point.y - 45, this->position.y))
+  if (inRange(this->point.x, this->point.x + 50, this->position.x) && inRange(this->point.y, this->point.y - 65, this->position.y))
   {
     death(this->point, storage);
-    this->point = get_target(this->position, storage)->get_position();
+    this->point = get_target(storage);
   }
 }
 
