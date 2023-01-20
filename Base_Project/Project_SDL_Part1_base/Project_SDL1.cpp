@@ -132,7 +132,7 @@ void sheep::fuite(std::vector<animal*> storage)
 {
     for (auto target : storage)
     {
-        if (target->get_type() == 's')
+        if (target->get_type() == 's'|| target->get_pv() !=  1)
             continue;
         double first_x = target->get_position().x - position.x;
         double  first_y = target->get_position().y - position.y;
@@ -206,6 +206,8 @@ void sheep::move(std::vector<animal *> *storage) {
 wolf::wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage) : animal(file_path_w, window_surface_ptr){
   this->type = type;
   this->speed = 1;
+  this->timetolive = SDL_GetTicks();
+  this->hasCaughtSheep = false;
 
   /*animal *target = get_target(this->position, storage);
   if (target->get_type() == 'w') {
@@ -244,8 +246,11 @@ SDL_Rect wolf::get_target( std::vector<animal*> storage) {
         }
 
     }
+
     return nearest;
 }
+
+
 
 void wolf::move(std::vector<animal*> *storage) {
 
@@ -280,11 +285,27 @@ void wolf::move(std::vector<animal*> *storage) {
     this->point = get_target(*storage);// Compare animal position and point followed position
 
   // If the wolf touch a sheep, the sheep die and the wolf has a new target
-  if (inRange(this->point.x, this->point.x + 50, this->position.x) && inRange(this->point.y, this->point.y - 65, this->position.y))
+  if (inRange(this->point.x, this->point.x + 60, this->position.x) && inRange(this->point.y, this->point.y - 75, this->position.y))
   {
     death(this->point, *storage);
+    this->hasCaughtSheep = true;
     this->point = get_target(*storage);
   }
+  wolf_hunt();
+}
+
+void wolf::wolf_hunt() {
+
+    if  (SDL_GetTicks() - timetolive  < time_limit ) {
+        if (this->hasCaughtSheep) {
+            timetolive = SDL_GetTicks();
+            this->hasCaughtSheep = false;
+        }
+    }
+    else if (!(this->hasCaughtSheep)) {
+        this->pv = 0;
+        std::cout << "Wolf died of hunger and desire." << std::endl;
+    }
 }
 
 ground::ground(SDL_Surface* window_surface_ptr) {

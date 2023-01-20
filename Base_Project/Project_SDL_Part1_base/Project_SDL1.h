@@ -92,10 +92,14 @@ public:
 // for sheep you can add the wolves
 class wolf : public animal {
 public:
+    Uint32 time_limit = 10000;
+    Uint32 timetolive;
+    bool hasCaughtSheep = false ;
   wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage);
   ~wolf(){}
   SDL_Rect get_target( std::vector<animal*> storage);
   void move(std::vector<animal*> *storage);
+  void wolf_hunt();
 };
 
 // The "ground" on which all the animals live (like the std::vector
