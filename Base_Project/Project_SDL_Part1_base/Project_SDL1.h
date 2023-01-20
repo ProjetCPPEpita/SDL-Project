@@ -24,6 +24,7 @@ constexpr unsigned frame_boundary = 100;
 constexpr char file_path_s[] = "../media/sheep.png";// Path to the sheep image
 constexpr char file_path_sf[] = "../media/sheep2.png";// Path to the sheep female image
 constexpr char file_path_w[] = "../media/wolf.png"; // Path to the wolf image
+constexpr char file_path_shepherd[] = "../media/shepherd.png"; // Path to the shepherd image
 
 // Helper function to initialize SDL
 void init();
@@ -58,11 +59,12 @@ public:
   int get_pv();
   int get_speed();
   int get_sexe();
-  void death(SDL_Rect point, std::vector<animal*> storage);
+  std::vector<animal*> death(SDL_Rect point, std::vector<animal*> storage);
   void draw();
 
 
- virtual void move(std::vector<animal*> *storage) = 0; // Animals move around, but in a different
+
+    virtual void move(std::vector<animal*> *storage) = 0; // Animals move around, but in a different
                            // fashion depending on which type of animal
 };
 
@@ -92,18 +94,39 @@ public:
 // for sheep you can add the wolves
 class wolf : public animal {
 public:
-    Uint32 time_limit = 10000;
+    Uint32 time_limit= 9000;
     Uint32 timetolive;
-    bool hasCaughtSheep = false ;
-  wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage);
-  ~wolf(){}
-  SDL_Rect get_target( std::vector<animal*> storage);
-  void move(std::vector<animal*> *storage);
-  void wolf_hunt();
+    bool hasCaughtSheep;
+    wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage);
+    ~wolf(){}
+    SDL_Rect get_target( std::vector<animal*> storage);
+    void wolf_hunt();
+    void move(std::vector<animal*> *storage);
 };
 
 // The "ground" on which all the animals live (like the std::vector
 // in the zoo example).
+
+class shepherd {
+private:
+    SDL_Surface* window_surface_ptr_; // ptr to the surface on which we want the
+    // shepherd to be drawn, also non-owning
+    SDL_Surface* image_ptr_; // The texture of the shepherd (the loaded image), use
+    // load_surface_for
+
+public:
+    SDL_Rect shepherd_position; // To have access to the position of the shepherd
+    SDL_Rect shepherd_get_position();
+    void set_x_position(int x);
+    void set_y_position(int y);
+    void shepherd_draw();
+
+    shepherd(const char *file_path, SDL_Surface* window_surface_ptr);
+    void shepherd_move(SDL_Event event);
+    ~shepherd(){}
+
+};
+
 class ground {
 private:
   // Attention, NON-OWNING ptr, again to the screen
@@ -111,15 +134,16 @@ private:
 
   // Some attribute to store all the wolves and sheep
   std::vector<animal*> storage;
+    shepherd *shepherd_;
 
 public:
-  ground(SDL_Surface* window_surface_ptr); // Ctor
-  ~ground(); // Dtor, again for clean up (if necessary)
+    ground(SDL_Surface* window_surface_ptr); // Ctor
+    ~ground(); // Dtor, again for clean up (if necessary)
 
-  void add_animal(char type); // Add an animal
+    void add_animal(char type); // Add an animal
 
-  void update(SDL_Surface *s); // "refresh the screen": Move animals and draw them
-                 // Possibly other methods, depends on your implementation
+    void update(SDL_Surface *s , SDL_Event window_event_); // "refresh the screen": Move animals and draw them
+    std::vector<animal*> get_storage();
 };
 
 // The application class, which is in charge of generating the window

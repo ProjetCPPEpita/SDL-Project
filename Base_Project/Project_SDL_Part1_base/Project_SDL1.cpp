@@ -12,6 +12,7 @@
 #include <math.h>
 #include <iostream>
 #include <experimental/random>
+#include <chrono>
 
 // Returns true if x is in range [low..high], else false
 bool inRange(int low, int high, int x)
@@ -20,24 +21,24 @@ bool inRange(int low, int high, int x)
 }
 
 void init() {
-  // Initialize SDL
-  if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0)
-    throw std::runtime_error("init():" + std::string(SDL_GetError()));
+    // Initialize SDL
+    if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0)
+        throw std::runtime_error("init():" + std::string(SDL_GetError()));
 
-  // Initialize PNG loading
-  int imgFlags = IMG_INIT_PNG;
-  if (!(IMG_Init(imgFlags) & imgFlags))
-    throw std::runtime_error("init(): SDL_image could not initialize! "
-                             "SDL_image Error: " +
-                             std::string(IMG_GetError()));
+    // Initialize PNG loading
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags))
+        throw std::runtime_error("init(): SDL_image could not initialize! "
+                                 "SDL_image Error: " +
+                                 std::string(IMG_GetError()));
 }
 
 SDL_Rect animal::get_position() {
-  return this->position;
+    return this->position;
 }
 
 SDL_Rect animal::get_point(){
-  return this->point;
+    return this->point;
 }
 
 void animal::set_point(SDL_Rect point)
@@ -46,52 +47,58 @@ void animal::set_point(SDL_Rect point)
 }
 
 char animal::get_type() {
-  return this->type;
+    return this->type;
 }
 
 int animal::get_pv() {
-  return this->pv;
+    return this->pv;
 }
 
 int animal::get_speed() {
-  return this->speed;
+    return this->speed;
 }
 int animal::get_sexe(){
     return this->sexe;
 }
+std::vector<animal*> ground::get_storage(){
+    return this->storage;
+}
 
 SDL_Rect get_random(SDL_Rect point){
 
-  // The point followed by each animal is chosen randomly
-  int range_x = (frame_width-frame_boundary) - frame_boundary + 1;
-  int range_y = (frame_height-frame_boundary) - frame_boundary + 1;
-  point.x = rand() % range_x + frame_boundary;
-  point.y = rand() % range_y + frame_boundary;
+    // The point followed by each animal is chosen randomly
+    int range_x = (frame_width-frame_boundary) - frame_boundary + 1;
+    int range_y = (frame_height-frame_boundary) - frame_boundary + 1;
+    point.x = rand() % range_x + frame_boundary;
+    point.y = rand() % range_y + frame_boundary;
 
-  return point;
+    return point;
 
 }
 
-void animal::death(SDL_Rect point, std::vector<animal*> storage) {
-  for (auto target : storage) {
-    if (target->get_position().x == point.x && target->get_position().y == point.y && target->get_type() == 's') {
-      target->pv = 0;
+std::vector<animal*> animal::death(SDL_Rect point, std::vector<animal*> storage) {
+    for (int i=0; i< storage.size(); i++) {
+        if (storage[i]->type == 'w')
+            continue;
+        if (inRange(storage[i]->position.x, storage[i]->position.x + 50, point.x) && inRange(storage[i]->position.y, storage[i]->position.y - 65, point.y)) {
+            storage[i]->pv = 0;
+        }
     }
-  }
+    return storage;
 }
 
 animal::animal(const char *file_path, SDL_Surface* window_surface_ptr){
-  window_surface_ptr_ = window_surface_ptr;
-  image_ptr_ = IMG_Load(file_path);
-  std::cout << file_path<<'\n';
-  if (!image_ptr_)
-      std::cout << "image cannot be load";
-  else
-      std::cout << "image loaded";
+    window_surface_ptr_ = window_surface_ptr;
+    image_ptr_ = IMG_Load(file_path);
+    std::cout << file_path<<'\n';
+    if (!image_ptr_)
+        std::cout << "image cannot be load";
+    else
+        std::cout << "image loaded";
 
-  // Initialize animal attribute
-  this->position = get_random(position);
-  this->pv = 1;
+    // Initialize animal attribute
+    this->position = get_random(position);
+    this->pv = 1;
 }
 
 animal::~animal(){
@@ -100,15 +107,15 @@ animal::~animal(){
 };
 
 void animal::draw(){
-  SDL_BlitSurface(image_ptr_, NULL, window_surface_ptr_, &position);
+    SDL_BlitSurface(image_ptr_, NULL, window_surface_ptr_, &position);
 }
 
 sheep::sheep(SDL_Surface* window_surface_ptr, char type) : animal((sexe == 1) ? file_path_s : file_path_sf, window_surface_ptr){
-  this->type = type;
-  this->point = get_random(point);
-  this->speed = 1;
-  this->sexe = std::experimental::randint(0,1);
-  this->time_to_reproduce = 0;
+    this->type = type;
+    this->point = get_random(point);
+    this->speed = 1;
+    this->sexe = std::experimental::randint(0,1);
+    this->time_to_reproduce = 0;
 }
 
 std::vector<animal*> sheep::reproduce(std::vector<animal *> storage) {
@@ -132,7 +139,7 @@ void sheep::fuite(std::vector<animal*> storage)
 {
     for (auto target : storage)
     {
-        if (target->get_type() == 's'|| target->get_pv() !=  1)
+        if (target->get_type() == 's' || target->get_pv() !=  1)
             continue;
         double first_x = target->get_position().x - position.x;
         double  first_y = target->get_position().y - position.y;
@@ -165,58 +172,58 @@ void sheep::move(std::vector<animal *> *storage) {
 
     fuite(*storage);
 
-  // Compare animal position and point followed position
-  if (this->point.x > this->position.x){
-      this->position.x += this->speed;
-    if (this->point.y > this->position.y){
-      this->position.y += this->speed;
+    // Compare animal position and point followed position
+    if (this->point.x > this->position.x){
+        this->position.x += this->speed;
+        if (this->point.y > this->position.y){
+            this->position.y += this->speed;
+        }
+        else if (this->point.y < this->position.y){
+            this->position.y -= this->speed;
+        }
     }
-    else if (this->point.y < this->position.y){
-      this->position.y -= this->speed;
+    else if (this->point.x < this->position.x){
+        this->position.x -= this->speed;
+        if (this->point.y > this->position.y){
+            this->position.y += this->speed;
+        }
+        else if (this->point.y < this->position.y){
+            this->position.y -= this->speed;
+        }
     }
-  }
-  else if (this->point.x < this->position.x){
-      this->position.x -= this->speed;
-    if (this->point.y > this->position.y){
-      this->position.y += this->speed;
+    else if (this->point.x == this->position.x)
+    {
+        if (this->point.y > this->position.y){
+            this->position.y += this->speed;
+        }
+        else if (this->point.y < this->position.y){
+            this->position.y -= this->speed;
+        }
     }
-    else if (this->point.y < this->position.y){
-      this->position.y -= this->speed;
-    }
-  }
-  else if (this->point.x == this->position.x)
-  {
-      if (this->point.y > this->position.y){
-          this->position.y += this->speed;
-      }
-      else if (this->point.y < this->position.y){
-          this->position.y -= this->speed;
-      }
-  }
-  if (this->sexe == 0) //female
-      *storage = reproduce(*storage);
+    if (this->sexe == 0) //female
+        *storage = reproduce(*storage);
 
-  // If the animal touch the point, modify point position
-  if (inRange(point.x - 2, point.x + 2, position.x) && inRange(point.y - 2, point.y + 2, position.y )) {
-    this->point = get_random(this->point);
-  }
+    // If the animal touch the point, modify point position
+    if (inRange(point.x - 2, point.x + 2, position.x) && inRange(point.y - 2, point.y + 2, position.y )) {
+        this->point = get_random(this->point);
+    }
 
 }
 
 wolf::wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage) : animal(file_path_w, window_surface_ptr){
-  this->type = type;
-  this->speed = 1;
-  this->timetolive = SDL_GetTicks();
-  this->hasCaughtSheep = false;
+    this->type = type;
+    this->speed = 2;
+    this-> timetolive = SDL_GetTicks();
+    this-> hasCaughtSheep = false;
 
-  /*animal *target = get_target(this->position, storage);
-  if (target->get_type() == 'w') {
-    this->point = get_random(this->point);
-  }
-  else {
-    this->point = target->get_position();
-  }
-    std::cout<<"wpoint x " <<this->point.x <<'\n' <<"wpoint y " <<this->point.y<<'\n';*/
+    /*animal *target = get_target(this->position, storage);
+    if (target->get_type() == 'w') {
+      this->point = get_random(this->point);
+    }
+    else {
+      this->point = target->get_position();
+    }
+      std::cout<<"wpoint x " <<this->point.x <<'\n' <<"wpoint y " <<this->point.y<<'\n';*/
 
 }
 
@@ -225,9 +232,11 @@ SDL_Rect wolf::get_target( std::vector<animal*> storage) {
     double first_x;
     double first_y;
     int i = 0;
-    while (storage[i]->get_pv() != 1 && storage[i]->get_type() != 's')
+    while (storage[i]->get_pv() != 1 || storage[i]->get_type() == 'w')
     {
         i++;
+        if (i >= storage.size() )
+            return storage[0]->get_position();
     }
     first_x = storage[i]->get_position().x - position.x;
     first_y = storage[i]->get_position().y - position.y;
@@ -246,54 +255,8 @@ SDL_Rect wolf::get_target( std::vector<animal*> storage) {
         }
 
     }
-
     return nearest;
 }
-
-
-
-void wolf::move(std::vector<animal*> *storage) {
-
-
-  if (this->point.x > this->position.x){
-      this->position.x += this->speed;
-    if (this->point.y > this->position.y){
-      this->position.y += this->speed;
-    }
-    else if (this->point.y < this->position.y){
-      this->position.y -= this->speed;
-    }
-  }
-  else if (this->point.x < this->position.x){
-      this->position.x -= this->speed;
-    if (this->point.y > this->position.y){
-      this->position.y += this->speed;
-    }
-    else if (this->point.y < this->position.y){
-      this->position.y -= this->speed;
-    }
-  }
-  else if (this->point.x == this->position.x)
-  {
-      if (this->point.y > this->position.y){
-          this->position.y += this->speed;
-      }
-      else if (this->point.y < this->position.y){
-          this->position.y -= this->speed;
-      }
-  }
-    this->point = get_target(*storage);// Compare animal position and point followed position
-
-  // If the wolf touch a sheep, the sheep die and the wolf has a new target
-  if (inRange(this->point.x, this->point.x + 60, this->position.x) && inRange(this->point.y, this->point.y - 75, this->position.y))
-  {
-    death(this->point, *storage);
-    this->hasCaughtSheep = true;
-    this->point = get_target(*storage);
-  }
-  wolf_hunt();
-}
-
 void wolf::wolf_hunt() {
 
     if  (SDL_GetTicks() - timetolive  < time_limit ) {
@@ -308,48 +271,149 @@ void wolf::wolf_hunt() {
     }
 }
 
+void wolf::move(std::vector<animal*> *storage) {
+
+
+    if (this->point.x > this->position.x){
+        this->position.x += this->speed;
+        if (this->point.y > this->position.y){
+            this->position.y += this->speed;
+        }
+        else if (this->point.y < this->position.y){
+            this->position.y -= this->speed;
+        }
+    }
+    else if (this->point.x < this->position.x){
+        this->position.x -= this->speed;
+        if (this->point.y > this->position.y){
+            this->position.y += this->speed;
+        }
+        else if (this->point.y < this->position.y){
+            this->position.y -= this->speed;
+        }
+    }
+    else if (this->point.x == this->position.x)
+    {
+        if (this->point.y > this->position.y){
+            this->position.y += this->speed;
+        }
+        else if (this->point.y < this->position.y){
+            this->position.y -= this->speed;
+        }
+    }
+    this->point = get_target(*storage);// Compare animal position and point followed position
+
+    // If the wolf touch a sheep, the sheep die and the wolf has a new target
+    if (inRange(this->point.x, this->point.x + 50, this->position.x + 30) && inRange(this->point.y, this->point.y - 65, this->position.y - 21))
+    {
+        *storage = death(this->point, *storage);
+        this->hasCaughtSheep =true;
+        this->point = get_target(*storage);
+    }
+    wolf_hunt();
+    this->hasCaughtSheep = false;
+}
+
+SDL_Rect shepherd::shepherd_get_position() {
+    return this->shepherd_position;
+}
+
+void shepherd::set_x_position(int x)
+{
+    this->shepherd_position.x = x;
+}
+
+void shepherd::set_y_position(int y)
+{
+    this->shepherd_position.y = y;
+}
+
+shepherd::shepherd(const char *file_path, SDL_Surface* window_surface_ptr){
+    window_surface_ptr_ = window_surface_ptr;
+    image_ptr_ = IMG_Load(file_path);
+    std::cout << file_path<<'\n';
+    if (!image_ptr_)
+        std::cout << "image cannot be load";
+    else
+        std::cout << "image loaded";
+
+    // Initialize animal attribute
+    this->shepherd_position.x = frame_width/2;
+    this->shepherd_position.y = frame_height/2;
+}
+
+void shepherd::shepherd_draw(){
+    SDL_BlitSurface(image_ptr_, NULL, window_surface_ptr_, &shepherd_position);
+}
+
+void shepherd::shepherd_move(SDL_Event event) {
+
+    if(event.type == SDL_KEYDOWN)
+    {
+        switch(event.key.keysym.sym)
+        {
+            case SDLK_z:
+                this->shepherd_position.y = shepherd_get_position().y - 1;
+                break;
+            case SDLK_s:
+                this->shepherd_position.y = shepherd_get_position().y + 1;
+                break;
+            case SDLK_q:
+                this->shepherd_position.x = shepherd_get_position().x - 1;
+                break;
+            case SDLK_d:
+                this->shepherd_position.x = shepherd_get_position().x + 1;
+                break;
+        }
+    }
+}
+
 ground::ground(SDL_Surface* window_surface_ptr) {
-  this->window_surface_ptr_ = window_surface_ptr;
+    this->window_surface_ptr_ = window_surface_ptr;
+    shepherd_ = new shepherd(file_path_shepherd, window_surface_ptr_);
 }
 
 ground::~ground(){
-  // Free SDL Surface
-  if (window_surface_ptr_)
-      SDL_FreeSurface(window_surface_ptr_);
-  window_surface_ptr_ = nullptr;
+    // Free SDL Surface
+    if (window_surface_ptr_)
+        SDL_FreeSurface(window_surface_ptr_);
+    window_surface_ptr_ = nullptr;
 
-  // Clear storage shared_ptr
-  for (auto target : storage) {
-    target->~animal();
-  }
-  storage.clear();
+    // Clear storage shared_ptr
+    for (auto target : storage) {
+        target->~animal();
+    }
+    storage.clear();
 
-  // Quit the Surface
-  SDL_Quit();
+    // Quit the Surface
+    SDL_Quit();
 
 } // Dtor, again for clean up (if necessary)
 
 void ground::add_animal(char type){
-  // If it's a sheep
-  if (type == 's') {
-    this->storage.push_back(new sheep(window_surface_ptr_, 's'));
-  }
-  else {
-    this->storage.push_back(new wolf(window_surface_ptr_, 'w', storage));
-  }
+    // If it's a sheep
+    if (type == 's') {
+        this->storage.push_back(new sheep(window_surface_ptr_, 's'));
+    }
+    else {
+        this->storage.push_back(new wolf(window_surface_ptr_, 'w', storage));
+    }
 } // Add an animal
 
-void ground::update(SDL_Surface *s){
-  SDL_BlitSurface(s, NULL, window_surface_ptr_, nullptr);
-  for (auto animal_ : storage) {
-    if (animal_->get_pv() == 1) {
-      animal_->move(&storage);
-      animal_->draw();
-        SDL_Delay(1);
+void ground::update(SDL_Surface *s, SDL_Event window_event_ ){
+    SDL_BlitSurface(s, NULL, window_surface_ptr_, nullptr);
+    shepherd_->shepherd_move(window_event_);
+    shepherd_->shepherd_draw();
+    for (auto animal_ : storage) {
+        if (animal_->get_pv() == 1) {
+            animal_->move(&storage);
+            animal_->draw();
+            SDL_Delay(1);
+            continue;
+        }
     }
-  }
 } // "refresh the screen": Move animals and draw them
-  // Possibly other methods, depends on your implementation
+// Possibly other methods, depends on your implementation
 
 application::application(unsigned n_sheep, unsigned n_wolf){
     window_ptr_ = SDL_CreateWindow("Sheep and Wolves",SDL_WINDOWPOS_UNDEFINED,
@@ -365,9 +429,11 @@ application::application(unsigned n_sheep, unsigned n_wolf){
     ground_ = new ground(window_surface_ptr_);
 
     for (unsigned n = nb_sheep; n > 0; n--)
-      ground_->add_animal('s');
+        ground_->add_animal('s');
     for (unsigned n = nb_wolf; n > 0; n--)
-      ground_->add_animal('w');
+        ground_->add_animal('w');
+
+    ground_->add_animal('d');
 
 } // Ctor
 
@@ -380,7 +446,18 @@ application::~application(){
     window_surface_ptr_ = nullptr;
     SDL_Quit();
 } // dtor
+float countsheep(std::vector<animal*> storage, bool vivant)
+{
+    int i = (vivant)? 1 : 0;
+    float count = 0;
+    for (auto target : storage)
+    {
+        if (target->get_type() == 's' && target->get_pv() == i)
+            count++;
+    }
 
+    return count;
+}
 int application::loop(unsigned period){
 
     if( window_ptr_ )
@@ -395,8 +472,12 @@ int application::loop(unsigned period){
 
         while((SDL_GetTicks() < (period*1000)) && continuer ) {
 
-            ground_->update(s);
+            ground_->update(s , window_event_);
             SDL_UpdateWindowSurface(window_ptr_);
+            if (countsheep(ground_->get_storage(), false) >= nb_sheep)
+            {
+                break;
+            }
 
             SDL_PollEvent(&window_event_);
             switch(window_event_.type)
@@ -404,8 +485,13 @@ int application::loop(unsigned period){
                 case SDL_QUIT:
                     continuer = false;
                     break;
+                case SDL_KEYDOWN:
+                    ground_->update(s, window_event_);
+                    break;
             }
         }
+        float average = countsheep(ground_->get_storage(), true) / nb_sheep;
+        std::cout << "End of the Game! Average sheep count: " << average << std::endl;
 
     }
     else
@@ -414,11 +500,11 @@ int application::loop(unsigned period){
     }
     return 0;
 } // main loop of the application.
-  // this ensures that the screen is updated
-  // at the correct rate.
-  // See SDL_GetTicks() and SDL_Delay() to enforce a
-  // duration the application should terminate after
-  // 'period' seconds
+// this ensures that the screen is updated
+// at the correct rate.
+// See SDL_GetTicks() and SDL_Delay() to enforce a
+// duration the application should terminate after
+// 'period' seconds
 
 namespace {
 // Defining a namespace without a name -> Anonymous workspace
