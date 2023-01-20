@@ -15,7 +15,9 @@ Create a build directory and run cmake and make from there
     make
 
 --> Run
+    
     cd Project_SDL_part1_base
+    
     ./SDL_part1 <nb_sheeps> <nb_wolves> <time>
 
 --> Characteristics
