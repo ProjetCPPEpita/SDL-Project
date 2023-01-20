@@ -10,6 +10,8 @@
 #include <random>
 #include <string>
 #include <math.h>
+#include <iostream>
+#include <experimental/random>
 
 // Returns true if x is in range [low..high], else false
 bool inRange(int low, int high, int x)
@@ -38,6 +40,11 @@ SDL_Rect animal::get_point(){
   return this->point;
 }
 
+void animal::set_point(SDL_Rect point)
+{
+    this->point = point;
+}
+
 char animal::get_type() {
   return this->type;
 }
@@ -49,11 +56,8 @@ int animal::get_pv() {
 int animal::get_speed() {
   return this->speed;
 }
-bool animal::get_chosen(){
-    return this->chosen;
-}
-void animal::set_chosen(bool choose){
-    this->chosen = choose;
+int animal::get_sexe(){
+    return this->sexe;
 }
 
 SDL_Rect get_random(SDL_Rect point){
@@ -66,33 +70,6 @@ SDL_Rect get_random(SDL_Rect point){
 
   return point;
 
-}
-
-SDL_Rect wolf::get_target( std::vector<animal*> storage) {
-    // on prend des moutons qui sont encore en vie
-    double first_x;
-    double first_y;
-    int i = 0;
-    while (storage[i]->get_pv() != 1 && storage[i]->get_type() != 's')
-    {
-        i++;
-    }
-    first_x = storage[i]->get_position().x - position.x;
-    first_y = storage[i]->get_position().y - position.y;
-    double min = sqrt(first_x*first_x + first_y*first_y);
-    SDL_Rect nearest = storage[i]->get_position();
-    for (auto target : storage) {
-      if (target->get_type() == 's' && target->get_pv() == 1 ) {
-        double diff_x = target->get_position().x - get_position().x;
-        double diff_y = target->get_position().y - get_position().y;
-        double dist = sqrt(diff_x*diff_x + diff_y*diff_y);
-        if (dist < min)
-          min = dist;
-          nearest = target->get_position();
-      }
-    }
-   // nearest->set_chosen(true);
-    return nearest;
 }
 
 void animal::death(SDL_Rect point, std::vector<animal*> storage) {
@@ -126,15 +103,67 @@ void animal::draw(){
   SDL_BlitSurface(image_ptr_, NULL, window_surface_ptr_, &position);
 }
 
-sheep::sheep(SDL_Surface* window_surface_ptr, char type) : animal(file_path_s, window_surface_ptr){
-  this->chosen = false;
+sheep::sheep(SDL_Surface* window_surface_ptr, char type) : animal((sexe == 1) ? file_path_s : file_path_sf, window_surface_ptr){
   this->type = type;
   this->point = get_random(point);
-  std::cout << "point.x =" << this->point.x <<"\npoint.y="<< this->point.y<<'\n';
   this->speed = 1;
+  this->sexe = std::experimental::randint(0,1);
+  this->time_to_reproduce = 0;
 }
 
-void sheep::move(std::vector<animal*> storage) {
+std::vector<animal*> sheep::reproduce(std::vector<animal *> storage) {
+
+    for (auto target : storage){
+        if (inRange(position.x, position.x + 50, target->get_position().x) && inRange(position.y, position.y - 60, target->get_position().y) ) {// si 2 moutons se rencontrent
+            clock_t diff = (clock() - this->time_to_reproduce);
+            if (target->get_type() == 's' && (this->sexe != target->get_sexe()) && diff > 10 * CLOCKS_PER_SEC) {
+                storage.push_back(new sheep(window_surface_ptr_, 's'));
+                this->time_to_reproduce = clock();
+
+            }//même type et sont de sexe opposé
+
+        }
+
+    }
+    return storage;
+}
+
+void sheep::fuite(std::vector<animal*> storage)
+{
+    for (auto target : storage)
+    {
+        if (target->get_type() == 's')
+            continue;
+        double first_x = target->get_position().x - position.x;
+        double  first_y = target->get_position().y - position.y;
+        double dist = sqrt(first_x*first_x + first_y*first_y);
+
+        if (dist < 200)
+        {
+            point.x = 2 * position.x - target->get_position().x ;
+            point.y = 2 * position.y - target->get_position().y ;
+
+            if (point.x < frame_boundary)
+                point.x = frame_boundary + 10;
+            if (point.x > frame_width - frame_boundary)
+                point.x = frame_width - frame_boundary - 10;
+            if (point.y < frame_boundary)
+                point.y = frame_boundary + 10;
+            if (point.y > frame_height - frame_boundary)
+                point.y = frame_height - frame_boundary - 10;
+
+            speed = 2;
+            time_speed = clock();
+        }
+    }
+}
+
+void sheep::move(std::vector<animal *> *storage) {
+
+    if ( clock() - time_speed > 1 * CLOCKS_PER_SEC)// fin du boost speed après 2 sec
+        speed = 1;
+
+    fuite(*storage);
 
   // Compare animal position and point followed position
   if (this->point.x > this->position.x){
@@ -164,13 +193,14 @@ void sheep::move(std::vector<animal*> storage) {
           this->position.y -= this->speed;
       }
   }
-
-
+  if (this->sexe == 0) //female
+      *storage = reproduce(*storage);
 
   // If the animal touch the point, modify point position
-  if (this->position.x == this->point.x && this->position.y == this->point.y) {
+  if (inRange(point.x - 2, point.x + 2, position.x) && inRange(point.y - 2, point.y + 2, position.y )) {
     this->point = get_random(this->point);
   }
+
 }
 
 wolf::wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage) : animal(file_path_w, window_surface_ptr){
@@ -188,9 +218,38 @@ wolf::wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> stor
 
 }
 
-void wolf::move(std::vector<animal*> storage) {
+SDL_Rect wolf::get_target( std::vector<animal*> storage) {
+    // on prend des moutons qui sont encore en vie
+    double first_x;
+    double first_y;
+    int i = 0;
+    while (storage[i]->get_pv() != 1 && storage[i]->get_type() != 's')
+    {
+        i++;
+    }
+    first_x = storage[i]->get_position().x - position.x;
+    first_y = storage[i]->get_position().y - position.y;
+    double min = sqrt(first_x*first_x + first_y*first_y);
+    SDL_Rect nearest = storage[i]->get_position();
+    for (auto target : storage) {
+        if (target->get_type() == 'w' || target->get_pv() == 0)
+            continue;
 
-    point = get_target(storage);// Compare animal position and point followed position
+        double diff_x = target->get_position().x - position.x;
+        double diff_y = target->get_position().y - position.y;
+        double dist = sqrt(diff_x*diff_x + diff_y*diff_y);
+        if (dist < min) {
+            min = dist;
+            nearest = target->get_position();
+        }
+
+    }
+    return nearest;
+}
+
+void wolf::move(std::vector<animal*> *storage) {
+
+
   if (this->point.x > this->position.x){
       this->position.x += this->speed;
     if (this->point.y > this->position.y){
@@ -218,13 +277,13 @@ void wolf::move(std::vector<animal*> storage) {
           this->position.y -= this->speed;
       }
   }
-
+    this->point = get_target(*storage);// Compare animal position and point followed position
 
   // If the wolf touch a sheep, the sheep die and the wolf has a new target
   if (inRange(this->point.x, this->point.x + 50, this->position.x) && inRange(this->point.y, this->point.y - 65, this->position.y))
   {
-    death(this->point, storage);
-    this->point = get_target(storage);
+    death(this->point, *storage);
+    this->point = get_target(*storage);
   }
 }
 
@@ -263,8 +322,9 @@ void ground::update(SDL_Surface *s){
   SDL_BlitSurface(s, NULL, window_surface_ptr_, nullptr);
   for (auto animal_ : storage) {
     if (animal_->get_pv() == 1) {
-      animal_->move(storage);
+      animal_->move(&storage);
       animal_->draw();
+        SDL_Delay(1);
     }
   }
 } // "refresh the screen": Move animals and draw them

@@ -21,7 +21,8 @@ constexpr unsigned frame_height = 900; // Height of window in pixel
 // of the screen
 constexpr unsigned frame_boundary = 100;
 
-constexpr char file_path_s[] = "../media/sheep.png"; // Path to the sheep image
+constexpr char file_path_s[] = "../media/sheep.png";// Path to the sheep image
+constexpr char file_path_sf[] = "../media/sheep2.png";// Path to the sheep female image
 constexpr char file_path_w[] = "../media/wolf.png"; // Path to the wolf image
 
 // Helper function to initialize SDL
@@ -38,29 +39,30 @@ protected:
 
   SDL_Rect point; // Animals will follow a virtual point to all move
     // in a different way
-  bool chosen;
   char type; // To know the type of animal (sheep or wolf)
   int pv = 0;; // To distinguish sheeps and wolves
   float speed; // To move more or less quickly
-  void death(SDL_Rect point, std::vector<animal*> storage);
+  int sexe; //0 female 1 male
+
 
 public:
 
+    animal(const char *file_path, SDL_Surface* window_surface_ptr);
+
+    ~animal();
+
   SDL_Rect get_position();
   SDL_Rect get_point();
+  void set_point(SDL_Rect point);
   char get_type();
   int get_pv();
   int get_speed();
-  bool get_chosen();
-  void set_chosen(bool choose);
-
-  animal(const char *file_path, SDL_Surface* window_surface_ptr);
-
-  ~animal();
-
+  int get_sexe();
+  void death(SDL_Rect point, std::vector<animal*> storage);
   void draw();
 
-  virtual void move(std::vector<animal*> storage) = 0; // Animals move around, but in a different
+
+ virtual void move(std::vector<animal*> *storage) = 0; // Animals move around, but in a different
                            // fashion depending on which type of animal
 };
 
@@ -68,10 +70,20 @@ public:
 // class sheep, derived from animal
 class sheep : public animal {
 
+private:
+
+    Uint32 time_to_reproduce;
+    Uint32 time_speed;
+
 public:
     sheep(SDL_Surface* window_surface_ptr, char type);
     ~sheep(){}
-    void move(std::vector<animal*> storage);
+    std::vector<animal*> reproduce(std::vector<animal*> storage);
+    void fuite(std::vector<animal*> storage);
+    void move(std::vector<animal *> *storage);
+
+
+
 };
 
 // Insert here:
@@ -82,8 +94,8 @@ class wolf : public animal {
 public:
   wolf(SDL_Surface* window_surface_ptr, char type, std::vector<animal*> storage);
   ~wolf(){}
-  void move(std::vector<animal*> storage);
-  SDL_Rect get_target(std::vector<animal*> storage);
+  SDL_Rect get_target( std::vector<animal*> storage);
+  void move(std::vector<animal*> *storage);
 };
 
 // The "ground" on which all the animals live (like the std::vector

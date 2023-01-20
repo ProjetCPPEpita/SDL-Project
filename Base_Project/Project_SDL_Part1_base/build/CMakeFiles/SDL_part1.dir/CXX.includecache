@@ -23,6 +23,10 @@ string
 -
 math.h
 -
+iostream
+-
+experimental/random
+-
 
 /home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.h
 SDL.h
@@ -40,6 +44,14 @@ optional
 vector
 -
 stdlib.h
+-
+
+/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/main.cpp
+Project_SDL1.h
+/home/enzo/CPP_Project/SDL-Project/Base_Project/Project_SDL_Part1_base/Project_SDL1.h
+stdio.h
+-
+string
 -
 
 /usr/include/SDL2/SDL.h
