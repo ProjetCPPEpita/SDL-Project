@@ -22,7 +22,7 @@ constexpr unsigned frame_height = 900; // Height of window in pixel
 constexpr unsigned frame_boundary = 100;
 
 constexpr char file_path_s[] = "../media/sheep.png";// Path to the sheep image
-constexpr char file_path_sf[] = "../media/sheep2.png";// Path to the sheep female image
+constexpr char file_path_sf[] = "../media/sheep.png";// Path to the sheep female image
 constexpr char file_path_w[] = "../media/wolf.png"; // Path to the wolf image
 constexpr char file_path_shepherd[] = "../media/shepherd.png"; // Path to the shepherd image
 
